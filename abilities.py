@@ -1,4 +1,5 @@
-# Class and functions relating to ability scores
+# Class and functions relating to the ability pane and ability dock
+# Abilities are stored in both the abilities model and in the character object
 
 import sys
 import time
@@ -35,6 +36,9 @@ random.seed(time.time())
 
 
 class TableModel(QAbstractTableModel):
+    """Model used to store the characters abilities. Accessed by other widgets in the abilities pane to change the abilities
+    data. Separate from the abilities table stored in the character object."""
+
     def __init__(self, data):
         super().__init__()
         self.data = data
@@ -76,6 +80,8 @@ class TableModel(QAbstractTableModel):
 
 
 class AbilitiesTableView(QTableView):
+    """Table View used to display abilities from the abilities model."""
+
     def __init__(self):
         super(AbilitiesTableView, self).__init__()
 
@@ -87,6 +93,9 @@ class AbilitiesTableView(QTableView):
 
 
 class AbilitiesPane(QWidget):
+    """Central widget on the abilities dock. Holds the abilities table, buttons for rolling
+    and swapping abilities, and various settings."""
+
     def __init__(self, character):
         super().__init__()
 
@@ -96,6 +105,7 @@ class AbilitiesPane(QWidget):
 
         self.data = character.ability_scores
 
+        # Create model and view for holding ability names, scores, and modifiers
         self.abilities_view = AbilitiesTableView()
         self.abilities_model = TableModel(self.data)
         self.abilities_view.setModel(self.abilities_model)
@@ -103,28 +113,32 @@ class AbilitiesPane(QWidget):
         self.abilities_view.setColumnWidth(1, 40)
         self.abilities_view.setColumnWidth(2, 50)
         self.abilities_view.setFocusPolicy(Qt.NoFocus)
-        # self.abilities_view.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
-        # self.abilities_view.set_flags()
         self.layout.addWidget(self.abilities_view)
 
+        # Creates button for re-rolling abilities
         self.roll_abilities_button = QPushButton("Re-roll!")
         set_font(self.roll_abilities_button, 12, bold=True)
         self.roll_abilities_button.setCheckable(False)
         self.roll_abilities_button.clicked.connect(self.roll_abilities_button_clicked)
         self.layout.addWidget(self.roll_abilities_button)
 
+        # Creates buttons for swapping ability scores
+        # Requires two ability scores to be currently selected on the abilities table
         self.swap_button = QPushButton("Swap!")
         set_font(self.swap_button, 12, bold=True)
         self.swap_button.setCheckable(False)
         self.swap_button.clicked.connect(self.swap_button_clicked)
         self.layout.addWidget(self.swap_button)
 
+        # Set size and layout of abilities pane
         self.setLayout(self.layout)
         self.setFocusPolicy(Qt.NoFocus)
         self.setMaximumSize(QSize(200, 450))
 
     def roll_abilities_button_clicked(self):
-        # time.sleep(5)
+        """Uses 4d6 and add the 3 highest rolls method to generate scores, then refreshes score"""
+        # TODO: add additional methods for rolling abilities with setting selector in the abilities pave
+
         ability_scores = []
 
         for _ in range(6):
@@ -138,6 +152,8 @@ class AbilitiesPane(QWidget):
         self.refresh_abilities()
 
     def swap_button_clicked(self):
+        """If two scores are selected in the abilities table, they are swapped; otherwise no effect"""
+
         selected_indexes = self.abilities_view.selectedIndexes()
 
         if len(selected_indexes) != 2:
@@ -151,6 +167,9 @@ class AbilitiesPane(QWidget):
         self.refresh_abilities()
 
     def refresh_abilities(self):
+        """Calculates ability modifiers, refreshes ability scores and modifiers on the abilities table,
+        then calls update_abilities method to store the abilities in the character object"""
+
         self.calculate_ability_modifiers()
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))

@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         self.personal_info_dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         self.addDockWidget(Qt.TopDockWidgetArea, self.personal_info_dock, Qt.Horizontal)
 
-        self.centre = QWidget()
+        self.centre = DetailsTabs(character)
         self.setCentralWidget(self.centre)
 
 

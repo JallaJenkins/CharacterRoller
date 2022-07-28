@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QWidget,
-    QStackedWidget,
+    QStackedWidget, QTabWidget,
 )
 
 
@@ -9,10 +9,7 @@ class StatisticsPane(QWidget):
         super().__init__()
 
 
-
-
-
-class DetailsTabs(QStackedWidget):
+class DetailsTabs(QTabWidget):
     """Central area for holding three tabbed pages with character details:
         Tab 1) basic states and abilities,
         Tab 2) further background and more advanced abilities, and
@@ -22,7 +19,7 @@ class DetailsTabs(QStackedWidget):
         super().__init__()
 
         self.statistics_pane = StatisticsPane(character)
-        self.addWidget(self.statistics_pane)
+        self.addTab(self.statistics_pane, "Stats")
 
 
 
