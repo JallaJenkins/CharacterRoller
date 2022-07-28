@@ -312,6 +312,7 @@ class PersonalPane(QWidget):
 
     def handle_level_changed(self, level):
         self.character.level = level
+        self.subclass_box.update_available_subclasses()
         self.character.print_character()
 
 

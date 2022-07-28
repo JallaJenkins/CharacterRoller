@@ -4,7 +4,12 @@ from pprint import pprint
 
 MAX_LEVEL = 3
 
-ABILITIES_INIT = [
+INIT_CLASS = "Barbarian"
+INIT_SUBCLASS = "No Subclass Available"
+INIT_RACE = "Human"
+INIT_SUBRACE = "Standard Rules"
+
+INIT_ABILITIES = [
             ["STR", 10, 0],
             ["DEX", 10, 0],
             ["CON", 10, 0],
@@ -89,13 +94,13 @@ ALIGNMENTS = (
 class Character:
     """Object containing all the character's information"""
     def __init__(self):
-        self.ability_scores = list(ABILITIES_INIT)
+        self.ability_scores = list(INIT_ABILITIES)
         self.name = ""
         self.level = 1
-        self._class = "Barbarian"
-        self.subclass = CLASSES[self._class][1][0]
-        self.race = "Human"
-        self.subrace = RACES[self.race][0]
+        self._class = INIT_CLASS
+        self.subclass = INIT_SUBCLASS
+        self.race = INIT_RACE
+        self.subrace = INIT_SUBRACE
         self.background = BACKGROUNDS[0]
         self.alignment = ALIGNMENTS[0]
 
