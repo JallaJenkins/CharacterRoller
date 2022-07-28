@@ -1,3 +1,11 @@
+# Personal info pane for holding basic character date, other than abilities
+# Data is also stored in the character object
+# Data other than name and level are displayed in combo boxes for ease of selection.
+# Data on options for the combo boxes in held in character file
+
+# TODO: Remove all calls to character.print_character
+# TODO: Add mechanism for user to lock any selection
+
 from PyQt5.QtCore import (
     Qt,
     QAbstractTableModel,
@@ -94,6 +102,7 @@ class SubclassBox(QComboBox):
         self.update_subclass_view()
 
     def update_available_subclasses(self):
+        """Updates list of subclasses available when the user selects a new class"""
         self.clear()
         _class = self.character._class
         available_subclass_level = CLASSES[_class][0]
@@ -132,6 +141,7 @@ class SubraceBox(QComboBox):
         self.update_subrace_view()
 
     def update_available_subraces(self):
+        """Updates available subraces when user selects a new race"""
         self.clear()
         current_race = self.character.race
         available_subraces = RACES[current_race]
@@ -159,6 +169,7 @@ class LevelBox(QSpinBox):
         palette = self.lineEdit().palette()
         palette.setColor(QPalette.Highlight, QColor(Qt.transparent))
         palette.setColor(QPalette.HighlightedText, QColor(Qt.black))
+        self.lineEdit().setPalette(palette)
 
         self.update_level_box()
 
@@ -193,6 +204,8 @@ class AlignmentBox(QComboBox):
 
 
 class PersonalPane(QWidget):
+    """Central widget for the personal info dock"""
+
     def __init__(self, character):
         super().__init__()
 
