@@ -3,10 +3,7 @@ from PyQt5.QtWidgets import (
     QStackedWidget, QTabWidget,
 )
 
-
-class StatisticsPane(QWidget):
-    def __init__(self, character):
-        super().__init__()
+from statistics_tab import *
 
 
 class DetailsTabs(QTabWidget):
@@ -19,7 +16,8 @@ class DetailsTabs(QTabWidget):
         super().__init__()
 
         self.statistics_pane = StatisticsPane(character)
-        self.addTab(self.statistics_pane, "Stats")
+        self.addTab(self.statistics_pane, "&Stats")
+
 
 
 

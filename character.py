@@ -8,8 +8,15 @@ INIT_CLASS = "Barbarian"
 INIT_SUBCLASS = "No Subclass Available"
 INIT_RACE = "Human"
 INIT_SUBRACE = "Standard Rules"
+INIT_ARMORCLASS = 10
+INIT_HITPOINTS = 8
+INIT_INITIATIVE = 0
+INIT_SPEED = 30
+INIT_HITDICE = 8
+
 
 INIT_ABILITIES = [
+    # (Abbreviation, Initial score, Initial modifier)
             ["STR", 10, 0],
             ["DEX", 10, 0],
             ["CON", 10, 0],
@@ -18,37 +25,180 @@ INIT_ABILITIES = [
             ["CHA", 10, 0],
 ]
 
+
 CLASSES = {
-    "Barbarian": (3, ("Path of the Berserker", "Path of the Totem Warrior")),
-    "Bard": (3, ("College of Lore", "College of Valor")),
-    "Cleric": (1,
-               ("Domain of Knowledge",
+    # (Class name: Subclass selection level, Subclasses list, Hit dice)
+    "Barbarian":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Path of the Berserker",
+                    "Path of the Totem Warrior",
+                ),
+            "Hit Dice": 12,
+        },
+    "Bard":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "College of Lore",
+                    "College of Valor",
+                ),
+            "Hit Dice": 8,
+        },
+    "Cleric":
+        {
+            "Subclass Level": 1,
+            "Subclasses":
+                (
+                "Domain of Knowledge",
                 "Domain of Life",
                 "Domain of Light",
                 "Domain of Nature",
                 "Domain of Tempest",
                 "Domain of Trickery",
-                "Domain of War",)
-               ),
-    "Druid": (2, ("Circle of the Land", "Circle of the Moon")),
-    "Fighter": (3, ("Champion", "Battle Master", "Eldritch Knight")),
-    "Monk": (3, ("Way of the Open Hand", "Way of Shadow", "Way of the Four Elements")),
-    "Paladin": (3, ("Oath of Devotion", "Oath of the Ancients", "Oath of Vengeance")),
-    "Ranger": (3, ("Hunter", "Beast Master")),
-    "Rogue": (3, ("Thief", "Assassin", "Arcane Trickster")),
-    "Sorcerer": (1, ("Draconic Bloodline", "Wild Magic")),
-    "Warlock": (1, ("Patron: the Archfey", "Patron: the Fiend", "Patron: the Great Old One")),
-    "Wizard": (2,
-               ("School of Abjuration",
-                "School of Conjuration",
-                "School of Divination",
-                "School of Enchantment",
-                "School of Evocation",
-                "School of Illusion",
-                "School of Necromancy",
-                "School of Transmutation")
-               ),
+                "Domain of War",
+                ),
+            "Hit Dice": 8,
+        },
+    "Druid":
+        {
+            "Subclass Level": 2,
+            "Subclasses":
+                (
+                    "Circle of the Land",
+                    "Circle of the Moon",
+                ),
+            "Hit Dice": 8,
+        },
+    "Fighter":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Champion",
+                    "Battle Master",
+                    "Eldritch Knight",
+                ),
+            "Hit Dice": 10,
+        },
+    "Monk":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Way of the Open Hand",
+                    "Way of Shadow",
+                    "Way of the Four Elements"
+                ),
+            "Hit Dice": 8,
+        },
+    "Paladin":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Oath of Devotion",
+                    "Oath of the Ancients",
+                    "Oath of Vengeance",
+                ),
+            "Hit Dice": 10,
+        },
+    "Ranger":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Hunter",
+                    "Beast Master",
+                ),
+            "Hit Dice": 10,
+        },
+    "Rogue":
+        {
+            "Subclass Level": 3,
+            "Subclasses":
+                (
+                    "Thief",
+                    "Assassin",
+                    "Arcane Trickster",
+                ),
+            "Hit Dice": 8,
+        },
+    "Sorcerer":
+        {
+            "Subclass Level": 1,
+            "Subclasses":
+                (
+                    "Draconic Bloodline",
+                    "Wild Magic",
+                ),
+            "Hit Dice": 6,
+        },
+    "Warlock":
+        {
+            "Subclass Level": 1,
+            "Subclasses":
+                (
+                    "Patron: the Archfey",
+                    "Patron: the Fiend",
+                    "Patron: the Great Old One",
+                ),
+            "Hit Dice": 8,
+        },
+    "Wizard":
+        {
+            "Subclass Level": 2,
+            "Subclasses":
+                (
+                    "School of Abjuration",
+                    "School of Conjuration",
+                    "School of Divination",
+                    "School of Enchantment",
+                    "School of Evocation",
+                    "School of Illusion",
+                    "School of Necromancy",
+                    "School of Transmutation"),
+               "Hit Dice": 6,
+               },
 }
+
+# CLASSES = {
+#     # (Class name: Subclass selection level, Subclasses list, Hit dice)
+#     "Barbarian": (3, ("Path of the Berserker", "Path of the Totem Warrior"), 12),
+#     "Bard": (3, ("College of Lore", "College of Valor"), 8),
+#     "Cleric": (1,
+#                ("Domain of Knowledge",
+#                 "Domain of Life",
+#                 "Domain of Light",
+#                 "Domain of Nature",
+#                 "Domain of Tempest",
+#                 "Domain of Trickery",
+#                 "Domain of War",),
+#                8
+#                ),
+#     "Druid": (2, ("Circle of the Land", "Circle of the Moon"), 8),
+#     "Fighter": (3, ("Champion", "Battle Master", "Eldritch Knight"), 10),
+#     "Monk": (3, ("Way of the Open Hand", "Way of Shadow", "Way of the Four Elements"), 8),
+#     "Paladin": (3, ("Oath of Devotion", "Oath of the Ancients", "Oath of Vengeance"), 10),
+#     "Ranger": (3, ("Hunter", "Beast Master"), 10),
+#     "Rogue": (3, ("Thief", "Assassin", "Arcane Trickster"), 8),
+#     "Sorcerer": (1, ("Draconic Bloodline", "Wild Magic"), 6),
+#     "Warlock": (1, ("Patron: the Archfey", "Patron: the Fiend", "Patron: the Great Old One"), 8),
+#     "Wizard": (2,
+#                ("School of Abjuration",
+#                 "School of Conjuration",
+#                 "School of Divination",
+#                 "School of Enchantment",
+#                 "School of Evocation",
+#                 "School of Illusion",
+#                 "School of Necromancy",
+#                 "School of Transmutation"),
+#                6
+#                ),
+# }
 
 RACES = {
     "Dwarf": ("Hill Dwarf", "Mountain Dwarf"),
@@ -90,6 +240,36 @@ ALIGNMENTS = (
     "Chaotic Evil",
 )
 
+SAVING_THROWS = (
+    "Strength",
+    "Dexterity",
+    "Constitution",
+    "Intelligence",
+    "Wisdom",
+    "Charisma",
+)
+
+SKILLS = {
+    "Acrobatics",
+    "Animal Handling",
+    "Arcana",
+    "Athletics",
+    "Deception",
+    "History",
+    "Insight",
+    "Intimidation",
+    "Investigation",
+    "Medicine",
+    "Nature",
+    "Perception",
+    "Performance",
+    "Persuasion",
+    "Religion",
+    "Slight of Hand",
+    "Stealth",
+    "Survival",
+}
+
 
 class Character:
     """Object containing all the character's information"""
@@ -103,9 +283,24 @@ class Character:
         self.subrace = INIT_SUBRACE
         self.background = BACKGROUNDS[0]
         self.alignment = ALIGNMENTS[0]
+        self.proficiency_bonus = self.calculate_proficiency_bonus()
+        self.armorclass = INIT_ARMORCLASS
+        self.hitpoints = INIT_HITPOINTS
+        self.initiative = INIT_INITIATIVE
+        self.speed = INIT_SPEED
+        self.hitdice= INIT_HITDICE
 
     def update_abilities(self, ability_scores):
         self.ability_scores = ability_scores
+
+    def calculate_proficiency_bonus(self):
+        return (self.level // 4) + 2
+
+    def get_hitdice(self):
+        return CLASSES[self._class]["Hit Dice"]
+
+    def calculate_hit_points(self):
+        pass
 
     def print_character(self):          #TODO: remove
         """For debugging purposes"""
@@ -117,11 +312,12 @@ class Character:
         print(self.subrace)
         print(self.background)
         print(f"Level: {self.level}")
+        print(f"Prof bonus: {self.proficiency_bonus}")
         print("-" * 30)
         print()
 
     @staticmethod
     def get_max_subclass_length():
-        all_subclasses = set().union(*[set(CLASSES[sub][1]) for sub in CLASSES])
+        all_subclasses = set().union(*[set(CLASSES[sub]["Subclasses"]) for sub in CLASSES])
         return len(max(all_subclasses, key=len))
 

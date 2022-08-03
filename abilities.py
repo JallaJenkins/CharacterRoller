@@ -133,7 +133,7 @@ class AbilitiesPane(QWidget):
         # Set size and layout of abilities pane
         self.setLayout(self.layout)
         self.setFocusPolicy(Qt.NoFocus)
-        self.setMaximumSize(QSize(200, 450))
+        self.setMaximumSize(QSize(190, 450))
 
     def roll_abilities_button_clicked(self):
         """Uses 4d6 and add the 3 highest rolls method to generate scores, then refreshes score"""
@@ -188,6 +188,7 @@ class AbilitiesDock(QDockWidget):
         super().__init__()
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.setWindowTitle("Ability Scores")
+        # self.setTitleBarWidget(QWidget())
         self.abilities_pane = AbilitiesPane(character)
         self.setWidget(self.abilities_pane)
 

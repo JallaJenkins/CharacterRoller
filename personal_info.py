@@ -105,12 +105,12 @@ class SubclassBox(QComboBox):
         """Updates list of subclasses available when the user selects a new class"""
         self.clear()
         _class = self.character._class
-        available_subclass_level = CLASSES[_class][0]
+        available_subclass_level = CLASSES[_class]["Subclass Level"]
         if self.character.level < available_subclass_level:
             self.addItem("No subclass available")
             return
 
-        available_subclasses = CLASSES[_class][1]
+        available_subclasses = CLASSES[_class]["Subclasses"]
         for subclass in available_subclasses:
             self.addItem(subclass)
 

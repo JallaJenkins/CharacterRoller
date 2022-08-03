@@ -14,7 +14,7 @@ from PyQt5.QtGui import QIcon
 from abilities import *
 from character import *
 from personal_info import *
-from details import *
+from details_pane import *
 
 
 class MenuBar(QMenuBar):
