@@ -35,7 +35,7 @@ from utils import set_font
 random.seed(time.time())
 
 
-class TableModel(QAbstractTableModel):
+class AbilitiesTableModel(QAbstractTableModel):
     """Model used to store the characters abilities. Accessed by other widgets in the abilities pane to change the abilities
     data. Separate from the abilities table stored in the character object."""
 
@@ -107,7 +107,7 @@ class AbilitiesPane(QWidget):
 
         # Create model and view for holding ability names, scores, and modifiers
         self.abilities_view = AbilitiesTableView()
-        self.abilities_model = TableModel(self.data)
+        self.abilities_model = AbilitiesTableModel(self.data)
         self.abilities_view.setModel(self.abilities_model)
         self.abilities_view.resizeColumnsToContents()
         self.abilities_view.setColumnWidth(1, 40)
@@ -138,6 +138,7 @@ class AbilitiesPane(QWidget):
     def roll_abilities_button_clicked(self):
         """Uses 4d6 and add the 3 highest rolls method to generate scores, then refreshes score"""
         # TODO: add additional methods for rolling abilities with setting selector in the abilities pave
+        # TODO: add time delay for re-rolling abilities again
 
         ability_scores = []
 
@@ -146,9 +147,7 @@ class AbilitiesPane(QWidget):
             rolls.remove(min(rolls))
             ability_scores.append(sum(rolls))
 
-        for index, ability in enumerate(self.abilities_model.data):
-            ability[1] = ability_scores[index]
-
+        self.character.update_ability_scores(ability_scores)
         self.refresh_abilities()
 
     def swap_button_clicked(self):
@@ -159,26 +158,15 @@ class AbilitiesPane(QWidget):
         if len(selected_indexes) != 2:
             return
 
-        ability_score1 = self.abilities_model.data[selected_indexes[0].row()][1]
-        ability_score2 = self.abilities_model.data[selected_indexes[1].row()][1]
-        self.abilities_model.data[selected_indexes[0].row()][1] = ability_score2
-        self.abilities_model.data[selected_indexes[1].row()][1] = ability_score1
-
+        self.character.swap_ability_scores(selected_indexes)
         self.refresh_abilities()
 
     def refresh_abilities(self):
-        """Calculates ability modifiers, refreshes ability scores and modifiers on the abilities table,
-        then calls update_abilities method to store the abilities in the character object"""
+        """Refresh abilities pane display"""
 
-        self.calculate_ability_modifiers()
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))
         self.abilities_model.dataChanged.emit(index1, index2)
-        self.character.update_abilities(self.abilities_model.data)
-
-    def calculate_ability_modifiers(self):
-        for ability in self.abilities_model.data:
-            ability[2] = (ability[1] // 2) - 5
 
 
 class AbilitiesDock(QDockWidget):

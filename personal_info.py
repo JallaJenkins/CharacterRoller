@@ -35,6 +35,7 @@ from PyQt5.QtGui import (
 from character import *
 from abilities import *
 from utils import set_font
+from statistics_tab import *
 
 
 FONT_SIZE = 14
@@ -88,7 +89,7 @@ class ClassBox(QComboBox):
         self.update_class_view()
 
     def update_class_view(self):
-        self.setCurrentText(self.character._class)
+        self.setCurrentText(self.character.character_class)
 
 
 class SubclassBox(QComboBox):
@@ -104,7 +105,7 @@ class SubclassBox(QComboBox):
     def update_available_subclasses(self):
         """Updates list of subclasses available when the user selects a new class"""
         self.clear()
-        _class = self.character._class
+        _class = self.character.character_class
         available_subclass_level = CLASSES[_class]["Subclass Level"]
         if self.character.level < available_subclass_level:
             self.addItem("No subclass available")
@@ -206,10 +207,11 @@ class AlignmentBox(QComboBox):
 class PersonalPane(QWidget):
     """Central widget for the personal info dock"""
 
-    def __init__(self, character):
+    def __init__(self, character, details_pane):
         super().__init__()
 
         self.character = character
+        self.details_pane = details_pane
         self.layout = QGridLayout()
 
         self.title = TitleLabel(" Character Roller")
@@ -287,8 +289,11 @@ class PersonalPane(QWidget):
         self.setLayout(self.layout)
 
     def handle_class_changed(self, _class):
-        self.character._class = _class
+        self.character.character_class = _class
         self.subclass_box.update_available_subclasses()
+        self.update_hitdice(self.character)
+        self.update_hitpoints(self.character)
+        self.character.print_character()
 
     def handle_subclass_changed(self, subclass):
         self.character.subclass = subclass
@@ -313,15 +318,25 @@ class PersonalPane(QWidget):
     def handle_level_changed(self, level):
         self.character.level = level
         self.subclass_box.update_available_subclasses()
+        self.update_hitdice(self.character)
+        self.update_hitpoints(self.character)
         self.character.print_character()
+
+    def update_hitpoints(self, character):
+        self.character.hitpoints = self.character.calculate_hit_points()
+        self.details_pane.statistics_tab.hitpointsbox.update_hitpointsbox(self.character)
+
+    def update_hitdice(self, character):
+        self.character.update_hitdie()
+        self.details_pane.statistics_tab.hitdicebox.update_hitdicebox(self.character)
 
 
 class PersonalInfoDock(QDockWidget):
     """Dock containing character's basic personal info such as class, race, and alignment."""
-    def __init__(self, character):
+    def __init__(self, character, details_pane):
         super().__init__()
 
         self.setAllowedAreas(Qt.TopDockWidgetArea | Qt.BottomDockWidgetArea)
         self.setWindowTitle("Personal Information")
-        self.personal_pane = PersonalPane(character)
+        self.personal_pane = PersonalPane(character, details_pane)
         self.setWidget(self.personal_pane)

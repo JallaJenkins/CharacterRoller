@@ -26,6 +26,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         character = Character()
+        self.centre = DetailsPane(character)
+
         self.setWindowTitle("Character Roller")
         self.setMinimumSize(QSize(1024, 768))
 
@@ -33,11 +35,10 @@ class MainWindow(QMainWindow):
         self.abilities_dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.abilities_dock, Qt.Vertical)
 
-        self.personal_info_dock = PersonalInfoDock(character)
+        self.personal_info_dock = PersonalInfoDock(character, self.centre)
         self.personal_info_dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         self.addDockWidget(Qt.TopDockWidgetArea, self.personal_info_dock, Qt.Horizontal)
 
-        self.centre = DetailsTabs(character)
         self.setCentralWidget(self.centre)
 
 

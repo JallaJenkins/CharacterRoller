@@ -9,10 +9,9 @@ INIT_SUBCLASS = "No Subclass Available"
 INIT_RACE = "Human"
 INIT_SUBRACE = "Standard Rules"
 INIT_ARMORCLASS = 10
-INIT_HITPOINTS = 8
 INIT_INITIATIVE = 0
 INIT_SPEED = 30
-INIT_HITDICE = 8
+INIT_HITDIE = 12
 
 
 INIT_ABILITIES = [
@@ -36,7 +35,7 @@ CLASSES = {
                     "Path of the Berserker",
                     "Path of the Totem Warrior",
                 ),
-            "Hit Dice": 12,
+            "Hit Die": 12,
         },
     "Bard":
         {
@@ -46,22 +45,22 @@ CLASSES = {
                     "College of Lore",
                     "College of Valor",
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Cleric":
         {
             "Subclass Level": 1,
             "Subclasses":
                 (
-                "Domain of Knowledge",
-                "Domain of Life",
-                "Domain of Light",
-                "Domain of Nature",
-                "Domain of Tempest",
-                "Domain of Trickery",
-                "Domain of War",
+                    "Domain of Knowledge",
+                    "Domain of Life",
+                    "Domain of Light",
+                    "Domain of Nature",
+                    "Domain of Tempest",
+                    "Domain of Trickery",
+                    "Domain of War",
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Druid":
         {
@@ -71,7 +70,7 @@ CLASSES = {
                     "Circle of the Land",
                     "Circle of the Moon",
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Fighter":
         {
@@ -82,7 +81,7 @@ CLASSES = {
                     "Battle Master",
                     "Eldritch Knight",
                 ),
-            "Hit Dice": 10,
+            "Hit Die": 10,
         },
     "Monk":
         {
@@ -93,7 +92,7 @@ CLASSES = {
                     "Way of Shadow",
                     "Way of the Four Elements"
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Paladin":
         {
@@ -104,7 +103,7 @@ CLASSES = {
                     "Oath of the Ancients",
                     "Oath of Vengeance",
                 ),
-            "Hit Dice": 10,
+            "Hit Die": 10,
         },
     "Ranger":
         {
@@ -114,7 +113,7 @@ CLASSES = {
                     "Hunter",
                     "Beast Master",
                 ),
-            "Hit Dice": 10,
+            "Hit Die": 10,
         },
     "Rogue":
         {
@@ -125,7 +124,7 @@ CLASSES = {
                     "Assassin",
                     "Arcane Trickster",
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Sorcerer":
         {
@@ -135,7 +134,7 @@ CLASSES = {
                     "Draconic Bloodline",
                     "Wild Magic",
                 ),
-            "Hit Dice": 6,
+            "Hit Die": 6,
         },
     "Warlock":
         {
@@ -146,7 +145,7 @@ CLASSES = {
                     "Patron: the Fiend",
                     "Patron: the Great Old One",
                 ),
-            "Hit Dice": 8,
+            "Hit Die": 8,
         },
     "Wizard":
         {
@@ -161,7 +160,7 @@ CLASSES = {
                     "School of Illusion",
                     "School of Necromancy",
                     "School of Transmutation"),
-               "Hit Dice": 6,
+            "Hit Die": 6,
                },
 }
 
@@ -277,7 +276,7 @@ class Character:
         self.ability_scores = list(INIT_ABILITIES)
         self.name = ""
         self.level = 1
-        self._class = INIT_CLASS
+        self.character_class = INIT_CLASS
         self.subclass = INIT_SUBCLASS
         self.race = INIT_RACE
         self.subrace = INIT_SUBRACE
@@ -285,34 +284,58 @@ class Character:
         self.alignment = ALIGNMENTS[0]
         self.proficiency_bonus = self.calculate_proficiency_bonus()
         self.armorclass = INIT_ARMORCLASS
-        self.hitpoints = INIT_HITPOINTS
         self.initiative = INIT_INITIATIVE
         self.speed = INIT_SPEED
-        self.hitdice= INIT_HITDICE
+        self.hitdie = INIT_HITDIE
+        self.hitpoints = self.calculate_hit_points()
 
-    def update_abilities(self, ability_scores):
-        self.ability_scores = ability_scores
+    def update_ability_scores(self, new_scores):
+        for index, ability in enumerate(self.ability_scores):
+            ability[1] = new_scores[index]
+        self.calculate_ability_modifiers()
+
+    def swap_ability_scores(self, swapped_ability_indices):
+        ability_score1 = self.ability_scores[swapped_ability_indices[0].row()][1]
+        ability_score2 = self.ability_scores[swapped_ability_indices[1].row()][1]
+        self.ability_scores[swapped_ability_indices[0].row()][1] = ability_score2
+        self.ability_scores[swapped_ability_indices[1].row()][1] = ability_score1
+        self.calculate_ability_modifiers()
+
+    def calculate_ability_modifiers(self):
+        # for ability in self.abilities_model.data:
+        for ability in self.ability_scores:
+            ability[2] = (ability[1] // 2) - 5
 
     def calculate_proficiency_bonus(self):
         return (self.level // 4) + 2
 
-    def get_hitdice(self):
-        return CLASSES[self._class]["Hit Dice"]
+    def update_hitdie(self):
+        self.hitdie = CLASSES[self.character_class]["Hit Die"]
 
     def calculate_hit_points(self):
+        return self._process_hit_points(self.level)
+
+    def _process_hit_points(self, level):
+        if level <= 1:
+            return self.hitdie
+        else:
+            return ((self.hitdie // 2) + 1) + self._process_hit_points(level - 1)
+
+    def calculate_speed(self):
         pass
 
     def print_character(self):          #TODO: remove
         """For debugging purposes"""
         pprint(self.ability_scores)
         print(self.name)
-        print(self._class)
+        print(self.character_class)
         print(self.subclass)
         print(self.race)
         print(self.subrace)
         print(self.background)
         print(f"Level: {self.level}")
         print(f"Prof bonus: {self.proficiency_bonus}")
+        print(f"Hit Dice: 1d{self.hitdie}")
         print("-" * 30)
         print()
 

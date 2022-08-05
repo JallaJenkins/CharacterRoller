@@ -18,50 +18,67 @@ class SavingThrowsBox(QGroupBox):
 class ProficiencyBonusBox(QGroupBox):
     def __init__(self, character):
         super(ProficiencyBonusBox, self).__init__("Proficiency Bonus")
-        self.stat = character.proficiency_bonus
-        self.statlabel = QLabel(f"+{self.stat}")
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_proficiencybonusbox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
+
+    def update_proficiencybonusbox(self, character):
+        self.statlabel.setText(f"+{character.proficiency_bonus}")
 
 
 class ArmorClassBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Armor Class")
-        self.stat = character.armorclass
-        self.statlabel = QLabel(str(self.stat))
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_armorclassbox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
+
+    def update_armorclassbox(self, character):
+        self.statlabel.setText(str(character.armorclass))
 
 
 class HitPointsBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Hit Points")
-        self.stat = character.hitpoints
-        self.statlabel = QLabel(f"{self.stat}/{self.stat}")
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_hitpointsbox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
+
+    def update_hitpointsbox(self, character):
+        self.statlabel.setText(f"{character.hitpoints}/{character.hitpoints}")
 
 
 class InitiativeBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Initiative")
-        self.stat = character.initiative
-        self.statlabel = QLabel(f"+{self.stat}")
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_intiativebox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
+
+    def update_intiativebox(self, character):
+        self.statlabel.setText(str(character.initiative))
 
 
 class SpeedBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Speed")
-        self.stat = character.speed
-        self.statlabel = QLabel(f"{self.stat}'")
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_speedbox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
+
+    def update_speedbox(self, character):
+        self.statlabel.setText(f"{character.speed}'")
 
 
 class HitDiceBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Hit Dice")
-        self.stat = character.hitdice
-        self.statlabel = QLabel(f"{character.level}d{self.stat}")
-        StatisticsPane.constructStatBox(self, self.statlabel)
+        self.statlabel = QLabel()
+        self.update_hitdicebox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel)
 
+    def update_hitdicebox(self, character):
+        self.statlabel.setText(f"{character.level}d{character.hitdie}")
 
 # Saving throws
 
@@ -75,7 +92,8 @@ class HitDiceBox(QGroupBox):
 # Equipment
 
 
-class StatisticsPane(QWidget):
+class StatisticsTab(QWidget):
+    """This tab contains the character's core stats and saving throw and skill modifiers."""
     def __init__(self, character):
         super().__init__()
 
