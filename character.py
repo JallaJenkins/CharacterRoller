@@ -289,20 +289,21 @@ class Character:
         self.hitdie = INIT_HITDIE
         self.hitpoints = self.calculate_hit_points()
 
-    def update_ability_scores(self, new_scores):
+    def update_ability_scores(self, new_scores: list):
+        """Replaces scores in ability_scores with the scores provided in new_scores"""
         for index, ability in enumerate(self.ability_scores):
             ability[1] = new_scores[index]
         self.calculate_ability_modifiers()
 
-    def swap_ability_scores(self, swapped_ability_indices):
-        ability_score1 = self.ability_scores[swapped_ability_indices[0].row()][1]
-        ability_score2 = self.ability_scores[swapped_ability_indices[1].row()][1]
-        self.ability_scores[swapped_ability_indices[0].row()][1] = ability_score2
-        self.ability_scores[swapped_ability_indices[1].row()][1] = ability_score1
+    def swap_ability_scores(self, ability_index1: int, ability_index2: int):
+        """Swaps scores in items at ability_index1 and ability_index2 in the ability_scores list"""
+        ability_score1 = self.ability_scores[ability_index1][1]
+        ability_score2 = self.ability_scores[ability_index2][1]
+        self.ability_scores[ability_index1][1] = ability_score2
+        self.ability_scores[ability_index2][1] = ability_score1
         self.calculate_ability_modifiers()
 
     def calculate_ability_modifiers(self):
-        # for ability in self.abilities_model.data:
         for ability in self.ability_scores:
             ability[2] = (ability[1] // 2) - 5
 

@@ -158,15 +158,24 @@ class AbilitiesPane(QWidget):
         if len(selected_indexes) != 2:
             return
 
-        self.character.swap_ability_scores(selected_indexes)
+        self.character.swap_ability_scores(selected_indexes[0].row(), selected_indexes[1].row())
         self.refresh_abilities()
 
     def refresh_abilities(self):
-        """Refresh abilities pane display"""
+        """Calculates ability modifiers, then refreshes ability scores and modifiers on the abilities table"""
 
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))
         self.abilities_model.dataChanged.emit(index1, index2)
+
+    # Previous code used before I realized that I could just modify the data source directly!
+
+        # self.character.update_abilities(self.abilities_model.data)
+
+    # def calculate_ability_modifiers(self):
+    #     # for ability in self.abilities_model.data:
+    #     for ability in self.character.ability_scores:
+    #         ability[2] = (ability[1] // 2) - 5
 
 
 class AbilitiesDock(QDockWidget):
