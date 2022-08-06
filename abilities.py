@@ -100,9 +100,7 @@ class AbilitiesPane(QWidget):
         super().__init__()
 
         self.character = character
-
         self.layout = QVBoxLayout()
-
         self.data = character.ability_scores
 
         # Create model and view for holding ability names, scores, and modifiers
@@ -122,7 +120,7 @@ class AbilitiesPane(QWidget):
         self.roll_abilities_button.clicked.connect(self.roll_abilities_button_clicked)
         self.layout.addWidget(self.roll_abilities_button)
 
-        # Creates buttons for swapping ability scores
+        # Creates button for swapping ability scores
         # Requires two ability scores to be currently selected on the abilities table
         self.swap_button = QPushButton("Swap!")
         set_font(self.swap_button, 12, bold=True)
@@ -147,7 +145,7 @@ class AbilitiesPane(QWidget):
             rolls.remove(min(rolls))
             ability_scores.append(sum(rolls))
 
-        self.character.update_ability_scores(ability_scores)
+        self.character.replace_ability_scores(ability_scores)
         self.refresh_abilities()
 
     def swap_button_clicked(self):
@@ -167,15 +165,6 @@ class AbilitiesPane(QWidget):
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))
         self.abilities_model.dataChanged.emit(index1, index2)
-
-    # Previous code used before I realized that I could just modify the data source directly!
-
-        # self.character.update_abilities(self.abilities_model.data)
-
-    # def calculate_ability_modifiers(self):
-    #     # for ability in self.abilities_model.data:
-    #     for ability in self.character.ability_scores:
-    #         ability[2] = (ability[1] // 2) - 5
 
 
 class AbilitiesDock(QDockWidget):

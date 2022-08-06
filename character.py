@@ -1,6 +1,8 @@
 # Classes relating to character data
 
 from pprint import pprint
+# from copy import deepcopy
+from class_data import *
 
 MAX_LEVEL = 3
 
@@ -13,191 +15,25 @@ INIT_INITIATIVE = 0
 INIT_SPEED = 30
 INIT_HITDIE = 12
 
+INIT_ABILITIES_RAW = [
+    # (Abbreviation, Initial score, Initial modifier)
+    ["STR", 10],
+    ["DEX", 10],
+    ["CON", 10],
+    ["INT", 10],
+    ["WIS", 10],
+    ["CHA", 10],
+]
 
 INIT_ABILITIES = [
     # (Abbreviation, Initial score, Initial modifier)
-            ["STR", 10, 0],
-            ["DEX", 10, 0],
-            ["CON", 10, 0],
-            ["INT", 10, 0],
-            ["WIS", 10, 0],
-            ["CHA", 10, 0],
+    ["STR", 10, 0],
+    ["DEX", 10, 0],
+    ["CON", 10, 0],
+    ["INT", 10, 0],
+    ["WIS", 10, 0],
+    ["CHA", 10, 0],
 ]
-
-
-CLASSES = {
-    # (Class name: Subclass selection level, Subclasses list, Hit dice)
-    "Barbarian":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Path of the Berserker",
-                    "Path of the Totem Warrior",
-                ),
-            "Hit Die": 12,
-        },
-    "Bard":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "College of Lore",
-                    "College of Valor",
-                ),
-            "Hit Die": 8,
-        },
-    "Cleric":
-        {
-            "Subclass Level": 1,
-            "Subclasses":
-                (
-                    "Domain of Knowledge",
-                    "Domain of Life",
-                    "Domain of Light",
-                    "Domain of Nature",
-                    "Domain of Tempest",
-                    "Domain of Trickery",
-                    "Domain of War",
-                ),
-            "Hit Die": 8,
-        },
-    "Druid":
-        {
-            "Subclass Level": 2,
-            "Subclasses":
-                (
-                    "Circle of the Land",
-                    "Circle of the Moon",
-                ),
-            "Hit Die": 8,
-        },
-    "Fighter":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Champion",
-                    "Battle Master",
-                    "Eldritch Knight",
-                ),
-            "Hit Die": 10,
-        },
-    "Monk":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Way of the Open Hand",
-                    "Way of Shadow",
-                    "Way of the Four Elements"
-                ),
-            "Hit Die": 8,
-        },
-    "Paladin":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Oath of Devotion",
-                    "Oath of the Ancients",
-                    "Oath of Vengeance",
-                ),
-            "Hit Die": 10,
-        },
-    "Ranger":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Hunter",
-                    "Beast Master",
-                ),
-            "Hit Die": 10,
-        },
-    "Rogue":
-        {
-            "Subclass Level": 3,
-            "Subclasses":
-                (
-                    "Thief",
-                    "Assassin",
-                    "Arcane Trickster",
-                ),
-            "Hit Die": 8,
-        },
-    "Sorcerer":
-        {
-            "Subclass Level": 1,
-            "Subclasses":
-                (
-                    "Draconic Bloodline",
-                    "Wild Magic",
-                ),
-            "Hit Die": 6,
-        },
-    "Warlock":
-        {
-            "Subclass Level": 1,
-            "Subclasses":
-                (
-                    "Patron: the Archfey",
-                    "Patron: the Fiend",
-                    "Patron: the Great Old One",
-                ),
-            "Hit Die": 8,
-        },
-    "Wizard":
-        {
-            "Subclass Level": 2,
-            "Subclasses":
-                (
-                    "School of Abjuration",
-                    "School of Conjuration",
-                    "School of Divination",
-                    "School of Enchantment",
-                    "School of Evocation",
-                    "School of Illusion",
-                    "School of Necromancy",
-                    "School of Transmutation"),
-            "Hit Die": 6,
-               },
-}
-
-# CLASSES = {
-#     # (Class name: Subclass selection level, Subclasses list, Hit dice)
-#     "Barbarian": (3, ("Path of the Berserker", "Path of the Totem Warrior"), 12),
-#     "Bard": (3, ("College of Lore", "College of Valor"), 8),
-#     "Cleric": (1,
-#                ("Domain of Knowledge",
-#                 "Domain of Life",
-#                 "Domain of Light",
-#                 "Domain of Nature",
-#                 "Domain of Tempest",
-#                 "Domain of Trickery",
-#                 "Domain of War",),
-#                8
-#                ),
-#     "Druid": (2, ("Circle of the Land", "Circle of the Moon"), 8),
-#     "Fighter": (3, ("Champion", "Battle Master", "Eldritch Knight"), 10),
-#     "Monk": (3, ("Way of the Open Hand", "Way of Shadow", "Way of the Four Elements"), 8),
-#     "Paladin": (3, ("Oath of Devotion", "Oath of the Ancients", "Oath of Vengeance"), 10),
-#     "Ranger": (3, ("Hunter", "Beast Master"), 10),
-#     "Rogue": (3, ("Thief", "Assassin", "Arcane Trickster"), 8),
-#     "Sorcerer": (1, ("Draconic Bloodline", "Wild Magic"), 6),
-#     "Warlock": (1, ("Patron: the Archfey", "Patron: the Fiend", "Patron: the Great Old One"), 8),
-#     "Wizard": (2,
-#                ("School of Abjuration",
-#                 "School of Conjuration",
-#                 "School of Divination",
-#                 "School of Enchantment",
-#                 "School of Evocation",
-#                 "School of Illusion",
-#                 "School of Necromancy",
-#                 "School of Transmutation"),
-#                6
-#                ),
-# }
 
 RACES = {
     "Dwarf": ("Hill Dwarf", "Mountain Dwarf"),
@@ -273,7 +109,7 @@ SKILLS = {
 class Character:
     """Object containing all the character's information"""
     def __init__(self):
-        self.ability_scores = list(INIT_ABILITIES)
+
         self.name = ""
         self.level = 1
         self.character_class = INIT_CLASS
@@ -283,29 +119,54 @@ class Character:
         self.background = BACKGROUNDS[0]
         self.alignment = ALIGNMENTS[0]
         self.proficiency_bonus = self.calculate_proficiency_bonus()
-        self.armorclass = INIT_ARMORCLASS
-        self.initiative = INIT_INITIATIVE
-        self.speed = INIT_SPEED
         self.hitdie = INIT_HITDIE
+
+        self.ability_scores_raw = INIT_ABILITIES_RAW
+        self.ability_scores = INIT_ABILITIES
+        self.armorclass_raw = INIT_ARMORCLASS
+        self.armorclass = INIT_ARMORCLASS
+        self.initiative_raw = INIT_INITIATIVE
+        self.initiative = INIT_INITIATIVE
+        self.speed_raw = INIT_SPEED
+        self.speed = INIT_SPEED
+        self.hitpoints_raw = self.calculate_hit_points()
         self.hitpoints = self.calculate_hit_points()
 
-    def update_ability_scores(self, new_scores: list):
+    def replace_ability_scores(self, new_scores: list):
         """Replaces scores in ability_scores with the scores provided in new_scores"""
-        for index, ability in enumerate(self.ability_scores):
+        for index, ability in enumerate(self.ability_scores_raw):
             ability[1] = new_scores[index]
-        self.calculate_ability_modifiers()
+        self.update_actual_ability_scores()
 
     def swap_ability_scores(self, ability_index1: int, ability_index2: int):
-        """Swaps scores in items at ability_index1 and ability_index2 in the ability_scores list"""
-        ability_score1 = self.ability_scores[ability_index1][1]
-        ability_score2 = self.ability_scores[ability_index2][1]
-        self.ability_scores[ability_index1][1] = ability_score2
-        self.ability_scores[ability_index2][1] = ability_score1
-        self.calculate_ability_modifiers()
+        """Swaps scores in items at ability_index1 and ability_index2 in the ability_scores_raw list then
+        updates ability_scores"""
+        ability_score1 = self.ability_scores_raw[ability_index1][1]
+        ability_score2 = self.ability_scores_raw[ability_index2][1]
+        self.ability_scores_raw[ability_index1][1] = ability_score2
+        self.ability_scores_raw[ability_index2][1] = ability_score1
+        self.update_actual_ability_scores()
 
     def calculate_ability_modifiers(self):
         for ability in self.ability_scores:
             ability[2] = (ability[1] // 2) - 5
+
+    def update_actual_ability_scores(self):
+        # Read in raw scores to ability_scores
+        for ability_score in enumerate(self.ability_scores):
+            ability_score[1][1] = self.ability_scores_raw[ability_score[0]][1]
+
+        # Add class modifiers
+        ability_modifiers = CLASSES[self.character_class]["Modifiers"].get("Abilities")
+        if ability_modifiers:
+            print(ability_modifiers)
+            for ability_modifier in ability_modifiers:
+                for ability_score in self.ability_scores:
+                    if ability_score[0] == ability_modifier:
+                        ability_score[1] += ability_modifiers[ability_modifier]
+
+        # Update ability modifiers
+        self.calculate_ability_modifiers()
 
     def calculate_proficiency_bonus(self):
         return (self.level // 4) + 2
