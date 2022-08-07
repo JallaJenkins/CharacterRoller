@@ -96,10 +96,11 @@ class AbilitiesPane(QWidget):
     """Central widget on the abilities dock. Holds the abilities table, buttons for rolling
     and swapping abilities, and various settings."""
 
-    def __init__(self, character):
+    def __init__(self, character, details_pane):
         super().__init__()
 
         self.character = character
+        self.details_pane = details_pane
         self.layout = QVBoxLayout()
         self.data = character.ability_scores
 
@@ -165,17 +166,18 @@ class AbilitiesPane(QWidget):
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))
         self.abilities_model.dataChanged.emit(index1, index2)
+        self.details_pane.refresh_details_pane()
 
 
 class AbilitiesDock(QDockWidget):
     """Dock containing character's basic ability scores."""
 
-    def __init__(self, character):
+    def __init__(self, character, details_pane):
         super().__init__()
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.setWindowTitle("Ability Scores")
         # self.setTitleBarWidget(QWidget())
-        self.abilities_pane = AbilitiesPane(character)
+        self.abilities_pane = AbilitiesPane(character, details_pane)
         self.setWidget(self.abilities_pane)
 
 

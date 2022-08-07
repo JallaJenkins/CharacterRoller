@@ -145,10 +145,7 @@ class SubraceBox(QComboBox):
         """Updates available subraces when user selects a new race"""
         self.clear()
         current_race = self.character.race
-        available_subraces = RACES[current_race]
-        if not available_subraces:
-            self.addItem("No subrace available")
-            return
+        available_subraces = RACES[current_race]["Subraces"]
 
         for subrace in available_subraces:
             self.addItem(subrace)
@@ -293,42 +290,41 @@ class PersonalPane(QWidget):
         self.subclass_box.update_available_subclasses()
         self.update_hitdice(self.character)
         self.update_hitpoints(self.character)
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def handle_subclass_changed(self, subclass):
         self.character.subclass = subclass
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def handle_race_changed(self, race):
         self.character.race = race
         self.subrace_box.update_available_subraces()
+        self.details_pane.refresh_details_pane()
 
     def handle_subrace_changed(self, subrace):
         self.character.subrace = subrace
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def handle_background_changed(self, background):
         self.character.background = background
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def handle_alignment_changed(self, alignment):
         self.character.alignment = alignment
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def handle_level_changed(self, level):
         self.character.level = level
         self.subclass_box.update_available_subclasses()
         self.update_hitdice(self.character)
         self.update_hitpoints(self.character)
-        self.character.print_character()
+        self.details_pane.refresh_details_pane()
 
     def update_hitpoints(self, character):
         self.character.hitpoints = self.character.calculate_hit_points()
-        self.details_pane.statistics_tab.hitpointsbox.update_hitpointsbox(self.character)
 
     def update_hitdice(self, character):
         self.character.update_hitdie()
-        self.details_pane.statistics_tab.hitdicebox.update_hitdicebox(self.character)
 
 
 class PersonalInfoDock(QDockWidget):

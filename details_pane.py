@@ -18,7 +18,8 @@ class DetailsPane(QTabWidget):
         self.statistics_tab = StatisticsTab(character)
         self.addTab(self.statistics_tab, "&Stats")
 
-
+    def refresh_details_pane(self):
+        self.statistics_tab.refresh_statistics_tab()
 
 
 

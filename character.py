@@ -3,13 +3,17 @@
 from pprint import pprint
 # from copy import deepcopy
 from class_data import *
+from race_data import *
+from background_data import *
 
 MAX_LEVEL = 3
 
-INIT_CLASS = "Barbarian"
-INIT_SUBCLASS = "No Subclass Available"
+INIT_CLASS = sorted(CLASSES)[0]
+INIT_SUBCLASS = "No Subclass Available" if CLASSES[INIT_CLASS]["Subclass Level"] > 1 \
+    else CLASSES[INIT_CLASS]["Subclasses"][0]
 INIT_RACE = "Human"
-INIT_SUBRACE = "Standard Rules"
+INIT_SUBRACE = RACES[INIT_RACE]["Subraces"][0]
+INIT_BACKGROUND = sorted(BACKGROUNDS)[0]
 INIT_ARMORCLASS = 10
 INIT_INITIATIVE = 0
 INIT_SPEED = 30
@@ -34,34 +38,6 @@ INIT_ABILITIES = [
     ["WIS", 10, 0],
     ["CHA", 10, 0],
 ]
-
-RACES = {
-    "Dwarf": ("Hill Dwarf", "Mountain Dwarf"),
-    "Elf": ("High Elf", "Wood Elf"),
-    "Halfling": ("Lightfoot", "Stout"),
-    "Human": ("Standard Rules", "Feat Rules"),
-    "Dragonborn": ("Black", "Blue", "Brass", "Bronze", "Copper", "Gold", "Green", "Red", "Silver", "White"),
-    "Gnome": ("Forest Gnome", "Rock Gnome"),
-    "Half-Elf": (),
-    "Half-Orc": (),
-    "Tiefling": (),
-}
-
-BACKGROUNDS = (
-    "Acolyte",
-    "Charlatan",
-    "Criminal",
-    "Entertainer",
-    "Folk Hero",
-    "Guild Artisan",
-    "Hermit",
-    "Noble",
-    "Outlander",
-    "Sage",
-    "Sailor",
-    "Soldier",
-    "Urchin",
-)
 
 ALIGNMENTS = (
     "True Neutral",
@@ -116,16 +92,16 @@ class Character:
         self.subclass = INIT_SUBCLASS
         self.race = INIT_RACE
         self.subrace = INIT_SUBRACE
-        self.background = BACKGROUNDS[0]
+        self.background = INIT_BACKGROUND
         self.alignment = ALIGNMENTS[0]
-        self.proficiency_bonus = self.calculate_proficiency_bonus()
+        self.proficiency_bonus = self.get_proficiency_bonus()
         self.hitdie = INIT_HITDIE
 
         self.ability_scores_raw = INIT_ABILITIES_RAW
         self.ability_scores = INIT_ABILITIES
         self.armorclass_raw = INIT_ARMORCLASS
         self.armorclass = INIT_ARMORCLASS
-        self.initiative_raw = INIT_INITIATIVE
+        # self.initiative_raw = INIT_INITIATIVE
         self.initiative = INIT_INITIATIVE
         self.speed_raw = INIT_SPEED
         self.speed = INIT_SPEED
@@ -151,6 +127,13 @@ class Character:
         for ability in self.ability_scores:
             ability[2] = (ability[1] // 2) - 5
 
+    def get_ability_modifier(self, ability_abbreviation):
+        for ability in self.ability_scores:
+            if ability[0] == ability_abbreviation:
+                return ability[2]
+
+        return None
+
     def update_actual_ability_scores(self):
         # Read in raw scores to ability_scores
         for ability_score in enumerate(self.ability_scores):
@@ -159,7 +142,6 @@ class Character:
         # Add class modifiers
         ability_modifiers = CLASSES[self.character_class]["Modifiers"].get("Abilities")
         if ability_modifiers:
-            print(ability_modifiers)
             for ability_modifier in ability_modifiers:
                 for ability_score in self.ability_scores:
                     if ability_score[0] == ability_modifier:
@@ -168,14 +150,16 @@ class Character:
         # Update ability modifiers
         self.calculate_ability_modifiers()
 
-    def calculate_proficiency_bonus(self):
+    def get_proficiency_bonus(self):
         return (self.level // 4) + 2
 
     def update_hitdie(self):
         self.hitdie = CLASSES[self.character_class]["Hit Die"]
 
     def calculate_hit_points(self):
-        return self._process_hit_points(self.level)
+        base_hit_points = self._process_hit_points(self.level)
+        hit_points_modifier = self.get_ability_modifier("CON") * self.level
+        self.hitpoints = base_hit_points + hit_points_modifier
 
     def _process_hit_points(self, level):
         if level <= 1:
@@ -183,8 +167,16 @@ class Character:
         else:
             return ((self.hitdie // 2) + 1) + self._process_hit_points(level - 1)
 
+    def update_speed(self):
+        self.speed_raw = RACES[self.race]["Speed"]
+        self.calculate_speed()
+
     def calculate_speed(self):
-        pass
+        # TODO: Dwaves do not get speed reduction from heavy armor
+        self.speed = self.speed_raw
+
+    def calculate_initiative(self):
+        self.initiative = self.get_ability_modifier("DEX")
 
     def print_character(self):          #TODO: remove
         """For debugging purposes"""

@@ -23,6 +23,7 @@ class ProficiencyBonusBox(QGroupBox):
         StatisticsTab.constructStatBox(self, self.statlabel)
 
     def update_proficiencybonusbox(self, character):
+        character.proficiency_bonus = character.get_proficiency_bonus()
         self.statlabel.setText(f"+{character.proficiency_bonus}")
 
 
@@ -45,6 +46,7 @@ class HitPointsBox(QGroupBox):
         StatisticsTab.constructStatBox(self, self.statlabel)
 
     def update_hitpointsbox(self, character):
+        character.calculate_hit_points()
         self.statlabel.setText(f"{character.hitpoints}/{character.hitpoints}")
 
 
@@ -56,6 +58,7 @@ class InitiativeBox(QGroupBox):
         StatisticsTab.constructStatBox(self, self.statlabel)
 
     def update_intiativebox(self, character):
+        character.calculate_initiative()
         self.statlabel.setText(str(character.initiative))
 
 
@@ -67,6 +70,7 @@ class SpeedBox(QGroupBox):
         StatisticsTab.constructStatBox(self, self.statlabel)
 
     def update_speedbox(self, character):
+        character.update_speed()
         self.statlabel.setText(f"{character.speed}'")
 
 
@@ -78,6 +82,7 @@ class HitDiceBox(QGroupBox):
         StatisticsTab.constructStatBox(self, self.statlabel)
 
     def update_hitdicebox(self, character):
+        character.update_hitdie()
         self.statlabel.setText(f"{character.level}d{character.hitdie}")
 
 # Saving throws
@@ -97,6 +102,7 @@ class StatisticsTab(QWidget):
     def __init__(self, character):
         super().__init__()
 
+        self.character = character
         self.layout = QHBoxLayout()
         self.sublayout_left = QVBoxLayout()
         self.sublayout_right = QVBoxLayout()
@@ -108,8 +114,8 @@ class StatisticsTab(QWidget):
         self.savingthrowsbox = SavingThrowsBox(character)
         self.sublayout_left.addWidget(self.savingthrowsbox)
 
-        self.proficiency_label = ProficiencyBonusBox(character)
-        self.topright_layout.addWidget(self.proficiency_label, 0, 0)
+        self.proficiencybox = ProficiencyBonusBox(character)
+        self.topright_layout.addWidget(self.proficiencybox, 0, 0)
 
         self.armorclassbox = ArmorClassBox(character)
         self.topright_layout.addWidget(self.armorclassbox, 0, 1)
@@ -117,8 +123,8 @@ class StatisticsTab(QWidget):
         self.hitpointsbox = HitPointsBox(character)
         self.topright_layout.addWidget(self.hitpointsbox, 0, 2)
 
-        self.initativebox = InitiativeBox(character)
-        self.topright_layout.addWidget(self.initativebox, 1, 0)
+        self.initiativebox = InitiativeBox(character)
+        self.topright_layout.addWidget(self.initiativebox, 1, 0)
 
         self.speedbox = SpeedBox(character)
         self.topright_layout.addWidget(self.speedbox, 1, 1)
@@ -135,6 +141,14 @@ class StatisticsTab(QWidget):
         self.layout.setStretch(0, 1)
         self.layout.setStretch(1, 1)
         self.setLayout(self.layout)
+
+    def refresh_statistics_tab(self):
+        self.proficiencybox.update_proficiencybonusbox(self.character)
+        self.armorclassbox.update_armorclassbox(self.character)
+        self.hitdicebox.update_hitdicebox(self.character)
+        self.hitpointsbox.update_hitpointsbox(self.character)
+        self.initiativebox.update_intiativebox(self.character)
+        self.speedbox.update_speedbox(self.character)
 
     @staticmethod
     def constructStatBox(statbox, statlabel):
