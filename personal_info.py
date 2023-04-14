@@ -1,4 +1,4 @@
-# Personal info pane for holding basic character date, other than abilities
+# Personal info pane for holding basic character data, other than abilities
 # Data is also stored in the character object
 # Data other than name and level are displayed in combo boxes for ease of selection.
 # Data on options for the combo boxes in held in character file
@@ -32,7 +32,7 @@ from PyQt5.QtGui import (
     QColor,
 )
 
-from character import *
+# from character import *
 from abilities import *
 from utils import set_font
 from statistics_tab import *

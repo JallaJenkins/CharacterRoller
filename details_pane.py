@@ -8,7 +8,7 @@ from statistics_tab import *
 
 class DetailsPane(QTabWidget):
     """Central area for holding three tabbed pages with character details:
-        Tab 1) basic states and abilities,
+        Tab 1) basic states and abilities (StatisticsTab),
         Tab 2) further background and more advanced abilities, and
         Tab 3) spells."""
 

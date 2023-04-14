@@ -11,8 +11,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 
-from abilities import *
-from character import *
+# from abilities import *
+# from character import *
 from personal_info import *
 from details_pane import *
 
@@ -47,4 +47,4 @@ app.setStyle('Fusion')
 w = MainWindow()
 w.show()
 
-app.exec()
+sys.exit(app.exec())

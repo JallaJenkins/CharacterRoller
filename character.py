@@ -51,14 +51,23 @@ ALIGNMENTS = (
     "Chaotic Evil",
 )
 
-SAVING_THROWS = (
-    "Strength",
-    "Dexterity",
-    "Constitution",
-    "Intelligence",
-    "Wisdom",
-    "Charisma",
-)
+INIT_SAVING_THROWS_RAW = [
+    ["Strength", 0],
+    ["Dexterity", 0],
+    ["Constitution", 0],
+    ["Intelligence", 0],
+    ["Wisdom", 0],
+    ["Charisma", 0],
+]
+
+INIT_SAVING_THROWS = [
+    [False, "Strength", 0],
+    [False, "Dexterity", 0],
+    [False, "Constitution", 0],
+    [False, "Intelligence", 0],
+    [False, "Wisdom", 0],
+    [False, "Charisma", 0],
+]
 
 SKILLS = {
     "Acrobatics",
@@ -99,6 +108,10 @@ class Character:
 
         self.ability_scores_raw = INIT_ABILITIES_RAW
         self.ability_scores = INIT_ABILITIES
+
+        self.saving_throws_raw = INIT_SAVING_THROWS_RAW
+        self.saving_throws = INIT_SAVING_THROWS
+
         self.armorclass_raw = INIT_ARMORCLASS
         self.armorclass = INIT_ARMORCLASS
         # self.initiative_raw = INIT_INITIATIVE
@@ -172,7 +185,7 @@ class Character:
         self.calculate_speed()
 
     def calculate_speed(self):
-        # TODO: Dwaves do not get speed reduction from heavy armor
+        # TODO: Dwarves do not get speed reduction from heavy armor
         self.speed = self.speed_raw
 
     def calculate_initiative(self):

@@ -6,7 +6,6 @@ import time
 from functools import partial
 import random
 
-from character import *
 
 from PyQt5.QtCore import (
     Qt,
@@ -29,7 +28,7 @@ from PyQt5.QtGui import (
     QFont,
 )
 
-from character import Character
+from character import *     # TODO: This line in necessary even though it is greyed out
 from utils import set_font
 
 random.seed(time.time())
@@ -109,8 +108,8 @@ class AbilitiesPane(QWidget):
         self.abilities_model = AbilitiesTableModel(self.data)
         self.abilities_view.setModel(self.abilities_model)
         self.abilities_view.resizeColumnsToContents()
-        self.abilities_view.setColumnWidth(1, 40)
-        self.abilities_view.setColumnWidth(2, 50)
+        # self.abilities_view.setColumnWidth(1, 40)
+        # self.abilities_view.setColumnWidth(2, 75)
         self.abilities_view.setFocusPolicy(Qt.NoFocus)
         self.layout.addWidget(self.abilities_view)
 
@@ -130,9 +129,11 @@ class AbilitiesPane(QWidget):
         self.layout.addWidget(self.swap_button)
 
         # Set size and layout of abilities pane
+        #TODO: Fix margins and justifications on abilities pane, if possible
         self.setLayout(self.layout)
         self.setFocusPolicy(Qt.NoFocus)
-        self.setMaximumSize(QSize(190, 450))
+        # self.setMaximumSize(QSize(190, 450))
+        self.setMaximumSize(QSize(235, 475))
 
     def roll_abilities_button_clicked(self):
         """Uses 4d6 and add the 3 highest rolls method to generate scores, then refreshes score"""
