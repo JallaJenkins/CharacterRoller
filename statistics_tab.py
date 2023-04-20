@@ -39,66 +39,6 @@ from pprint import pprint
 #         self.layout.addWidget(self.modifier_label)
 
 
-class RadioButtonDelegate(QItemDelegate):
-    def __init__(self):
-        QStyledItemDelegate.__init__(self)
-
-    def createEditor(self, parent, option, index):
-        """
-        Important, otherwise an editor is created if the user clicks in this cell.
-        """
-        return None
-
-    def paint(self, painter, option, index):
-        """
-        Paint a checkbox without the label.
-        """
-        # self.drawCheck(painter, option, option.rect, Qt.Unchecked if index.data() is False else Qt.Checked)
-        self.drawCheck(painter, option, option.rect, Qt.Unchecked)
-
-    def editorEvent(self, event, model, option, index):
-        '''
-        Change the data in the model and the state of the checkbox
-        if the user presses the left mousebutton and this cell is editable. Otherwise do nothing.
-        '''
-        if not int(index.flags() & Qt.ItemIsEditable) > 0:
-            return False
-
-        if event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton:
-            # Change the checkbox-state
-            self.setModelData(None, model, index)
-            return True
-
-        return False
-
-    def setModelData (self, editor, model, index):
-        '''
-        The user wanted to change the old state in the opposite.
-        '''
-        model.setData(index, True if not bool(index.data()) else False, Qt.EditRole)
-
-
-    # def createEditor(self, parent: QWidget, option: 'QStyleOptionViewItem', index: QModelIndex) -> QWidget:
-    #     editor = QRadioButton()
-    #     editor.setAutoExclusive(False)
-    #     editor.setAutoFillBackground(True)
-    #     editor.setFocus(Qt.StrongFocus)
-    #     return editor
-    #
-    # def setEditorData(self, editor: QWidget, index: QModelIndex) -> None:
-    #     value = index.model().data(index, Qt.EditRole)
-    #     radio_button = QRadioButton(editor)
-    #     radio_button.setChecked(value)
-    #
-    # def setModelData(self, editor: QWidget, model: QAbstractItemModel, index: QModelIndex) -> None:
-    #     radio_button = QRadioButton(editor)
-    #     value = radio_button.isChecked()
-    #     model.setData(index, value, Qt.EditRole)
-    #
-    # def updateEditorGeometry(self, editor: QWidget, option: 'QStyleOptionViewItem', index: QModelIndex) -> None:
-    #     editor.setGeometry(option.rect)
-
-
 class SavingThrowsModel(QAbstractTableModel):
     def __init__(self, data):
         super().__init__()
@@ -110,11 +50,7 @@ class SavingThrowsModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
 
             if index.column() == 0:
-                # return RadioButtonDelegate()
-                if isinstance(value, bool):
-                    return "T" if value is True else "F"
-                else:
-                    return ""
+                return ""
 
             if index.column() == 1:
                 return f" {value}"
@@ -128,18 +64,10 @@ class SavingThrowsModel(QAbstractTableModel):
     def columnCount(self, index):
         return len(self.data[0])
 
-    # def flags(self, index: QModelIndex) -> Qt.ItemFlags:
-    #     if index.column() == 0:
-    #         return (
-    #             Qt.ItemIsEditable
-    #             | Qt.ItemIsEnabled
-    #             | Qt.ItemIsSelectable
-    #         )
-    #
-    # def setData(self, index, value, role=Qt.EditRole):
-    #     # if index.column() == 0:
-    #     #     pass
-    #     pass
+    def update_saving_throws_view(self):
+        index1 = self.index(0, 0)
+        index2 = self.index(len(self.data), len(self.data[0]))
+        self.dataChanged.emit(index1, index2)
 
 
 class SavingThrowsView(QTableView):
@@ -152,8 +80,22 @@ class SavingThrowsView(QTableView):
         self.horizontalHeader().hide()
         self.setShowGrid(False)
 
-        delegate = RadioButtonDelegate()
-        self.setItemDelegateForColumn(0, delegate)
+        # delegate = RadioButtonDelegate()
+        # self.setItemDelegateForColumn(0, delegate)
+
+
+class SavingThrowCheckBox(QCheckBox):
+    def __init__(self, model, row, character):
+        super().__init__()
+
+        self.row = row
+        self.model = model
+        self.character = character
+
+    def saving_throw_checkbox_clicked(self, state):
+        self.model.data[self.row][0] = bool(state)
+        self.character.update_actual_saving_throws()
+        self.model.update_saving_throws_view()
 
 
 class SavingThrowsBox(QGroupBox):
@@ -173,10 +115,23 @@ class SavingThrowsBox(QGroupBox):
         self.tablemodel = SavingThrowsModel(self.data)
         self.tableview = SavingThrowsView()
         self.tableview.setModel(self.tablemodel)
+
+        self.checkboxes = []
+        for row in range(self.tablemodel.rowCount(0)):
+            checkbox = SavingThrowCheckBox(self.tablemodel, row, character)
+            checkbox.stateChanged.connect(checkbox.saving_throw_checkbox_clicked)
+            self.checkboxes.append(checkbox)
+
+            checkbox_layout = QVBoxLayout()
+            checkbox_layout.setAlignment(Qt.AlignHCenter)
+            checkbox_layout.addWidget(checkbox)
+            checkbox_pane = QWidget()
+            checkbox_pane.setLayout(checkbox_layout)
+            self.tableview.setIndexWidget(self.tablemodel.index(row, 0), checkbox_pane)
+
         self.tableview.setColumnWidth(0, 40)
         self.tableview.setColumnWidth(1, 150)
-
-
+        self.tableview.resizeRowsToContents()
         self.layout.addWidget(self.tableview)
         self.setLayout(self.layout)
 

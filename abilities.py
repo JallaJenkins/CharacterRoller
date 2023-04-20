@@ -163,6 +163,7 @@ class AbilitiesPane(QWidget):
 
     def refresh_abilities(self):
         """Calculates ability modifiers, then refreshes ability scores and modifiers on the abilities table"""
+        #TODO: Double-check function documentation
 
         index1 = self.abilities_model.index(0, 0)
         index2 = self.abilities_model.index(len(self.abilities_model.data), len(self.abilities_model.data[0]))

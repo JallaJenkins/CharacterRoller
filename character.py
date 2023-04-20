@@ -121,6 +121,7 @@ class Character:
         self.hitpoints_raw = self.calculate_hit_points()
         self.hitpoints = self.calculate_hit_points()
 
+    # Ability score helper functions
     def replace_ability_scores(self, new_scores: list):
         """Replaces scores in ability_scores with the scores provided in new_scores"""
         for index, ability in enumerate(self.ability_scores_raw):
@@ -149,8 +150,8 @@ class Character:
 
     def update_actual_ability_scores(self):
         # Read in raw scores to ability_scores
-        for ability_score in enumerate(self.ability_scores):
-            ability_score[1][1] = self.ability_scores_raw[ability_score[0]][1]
+        for index, ability_score in enumerate(self.ability_scores):
+            ability_score[1] = self.ability_scores_raw[index][1]
 
         # Add class modifiers
         ability_modifiers = CLASSES[self.character_class]["Modifiers"].get("Abilities")
@@ -162,6 +163,19 @@ class Character:
 
         # Update ability modifiers
         self.calculate_ability_modifiers()
+
+    # Saving throw helper functions
+    def update_actual_saving_throws(self):
+        # Read in raw scores to saving_throws
+        for index, saving_throw in enumerate(self.saving_throws):
+            saving_throw[2] = self.saving_throws_raw[index][1]
+
+        # Adjust for proficiency bonuses
+        for saving_throw in self.saving_throws:
+            if saving_throw[0]:
+                saving_throw[2] += self.proficiency_bonus
+
+        pprint(self.saving_throws)   #TODO: Remove once function is working
 
     def get_proficiency_bonus(self):
         return (self.level // 4) + 2
