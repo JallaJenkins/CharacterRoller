@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.centre = DetailsPane(character)
 
         self.setWindowTitle("Character Roller")
-        self.setMinimumSize(QSize(1024, 768))
+        self.setMinimumSize(QSize(1280, 720))
 
         self.abilities_dock = AbilitiesDock(character, self.centre)
         self.abilities_dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
