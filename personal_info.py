@@ -76,7 +76,6 @@ class NameBox(QLineEdit):
         self.character.name = self.text()
         self.setReadOnly(True)
         self.clearFocus()
-        self.character.print_character()
 
 
 class ClassBox(QComboBox):

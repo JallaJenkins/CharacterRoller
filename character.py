@@ -164,6 +164,9 @@ class Character:
         # Update ability modifiers
         self.calculate_ability_modifiers()
 
+        # # Update saving throws
+        self.update_actual_saving_throws()
+
     # Saving throw helper functions
     def update_actual_saving_throws(self):
         # Read in raw scores to saving_throws
@@ -175,7 +178,11 @@ class Character:
             if saving_throw[0]:
                 saving_throw[2] += self.proficiency_bonus
 
-        pprint(self.saving_throws)   #TODO: Remove once function is working
+        # Adjust for ability modifiers
+        for index, ability_score in enumerate(self.ability_scores):
+            self.saving_throws[index][2] += ability_score[2]
+
+        # pprint(self.saving_throws)   #TODO: Remove once function is working
 
     def get_proficiency_bonus(self):
         return (self.level // 4) + 2

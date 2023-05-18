@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QStyledItemDelegate,
     QItemDelegate,
-    QStyleOptionViewItem, QHeaderView, QTableView,
+    QStyleOptionViewItem, QHeaderView, QTableView, QAbstractItemView
 )
 
 from PyQt5.QtCore import (
@@ -56,6 +56,8 @@ class SavingThrowsModel(QAbstractTableModel):
                 return f" {value}"
 
             if index.column() == 2:
+                if value > 0:
+                    return f"+{value}"
                 return value
 
     def rowCount(self, index):
@@ -79,9 +81,7 @@ class SavingThrowsView(QTableView):
         # self.verticalHeader().setDefaultSectionSize(60)
         self.horizontalHeader().hide()
         self.setShowGrid(False)
-
-        # delegate = RadioButtonDelegate()
-        # self.setItemDelegateForColumn(0, delegate)
+        # self.setSelectionMode(QAbstractItemView.NoSelection)
 
 
 class SavingThrowCheckBox(QCheckBox):
@@ -110,7 +110,7 @@ class SavingThrowsBox(QGroupBox):
 
         self.layout = QVBoxLayout()
         self.data = character.saving_throws
-        pprint(self.data)
+        # pprint(self.data)
 
         self.tablemodel = SavingThrowsModel(self.data)
         self.tableview = SavingThrowsView()
@@ -265,6 +265,7 @@ class StatisticsTab(QWidget):
         self.setLayout(self.layout)
 
     def refresh_statistics_tab(self):
+        self.savingthrowsbox.tablemodel.update_saving_throws_view()
         self.proficiencybox.update_proficiencybonusbox(self.character)
         self.armorclassbox.update_armorclassbox(self.character)
         self.hitdicebox.update_hitdicebox(self.character)
