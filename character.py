@@ -69,26 +69,47 @@ INIT_SAVING_THROWS = [
     [False, "Charisma", 0],
 ]
 
-SKILLS = {
-    "Acrobatics",
-    "Animal Handling",
-    "Arcana",
-    "Athletics",
-    "Deception",
-    "History",
-    "Insight",
-    "Intimidation",
-    "Investigation",
-    "Medicine",
-    "Nature",
-    "Perception",
-    "Performance",
-    "Persuasion",
-    "Religion",
-    "Slight of Hand",
-    "Stealth",
-    "Survival",
-}
+INIT_SKILLS_RAW = [
+    ["Acrobatics", 0],
+    ["Animal Handling", 0],
+    ["Arcana", 0],
+    ["Athletics", 0],
+    ["Deception", 0],
+    ["History", 0],
+    ["Insight", 0],
+    ["Intimidation", 0],
+    ["Investigation", 0],
+    ["Medicine", 0],
+    ["Nature", 0],
+    ["Perception", 0],
+    ["Performance", 0],
+    ["Persuasion", 0],
+    ["Religion", 0],
+    ["Slight of Hand", 0],
+    ["Stealth", 0],
+    ["Survival", 0],
+]
+
+INIT_SKILLS = [
+    [False, "Acrobatics", 0, 1],
+    [False, "Animal Handling", 0],
+    [False, "Arcana", 0],
+    [False, "Athletics", 0],
+    [False, "Deception", 0],
+    [False, "History", 0],
+    [False, "Insight", 0],
+    [False, "Intimidation", 0],
+    [False, "Investigation", 0],
+    [False, "Medicine", 0],
+    [False, "Nature", 0],
+    [False, "Perception", 0],
+    [False, "Performance", 0],
+    [False, "Persuasion", 0],
+    [False, "Religion", 0],
+    [False, "Slight of Hand", 0],
+    [False, "Stealth", 0],
+    [False, "Survival", 0],
+]
 
 
 class Character:
@@ -111,6 +132,9 @@ class Character:
 
         self.saving_throws_raw = INIT_SAVING_THROWS_RAW
         self.saving_throws = INIT_SAVING_THROWS
+
+        self.skills_raw = INIT_SKILLS_RAW
+        self.skills = INIT_SKILLS
 
         self.armorclass_raw = INIT_ARMORCLASS
         self.armorclass = INIT_ARMORCLASS
@@ -184,6 +208,19 @@ class Character:
 
         # pprint(self.saving_throws)   #TODO: Remove once function is working
 
+    def update_actual_skills(self):
+        # Read in raw scores to skills
+        for index, skill, in enumerate(self.skills):
+            skill[2] = self.skills_raw[index][1]
+
+        # Adjust for proficiency bonus
+        for skill in self.skills:
+            if skill[0]:
+                skill[2] += self.proficiency_bonus
+
+        # Adjust for ability modifiers:
+
+
     def get_proficiency_bonus(self):
         return (self.level // 4) + 2
 
@@ -215,6 +252,7 @@ class Character:
     def print_character(self):          #TODO: remove
         """For debugging purposes"""
         pprint(self.ability_scores)
+        pprint(self.skills)
         print(self.name)
         print(self.character_class)
         print(self.subclass)
