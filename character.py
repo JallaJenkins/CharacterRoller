@@ -19,24 +19,44 @@ INIT_INITIATIVE = 0
 INIT_SPEED = 30
 INIT_HITDIE = CLASSES[INIT_CLASS]["Hit Die"]
 
+# Maps ability name to number
+ABILITY_INDEX = {
+    "Strength": 0,
+    "Dexterity": 1,
+    "Constitution": 2,
+    "Intelligence": 3,
+    "Wisdom": 4,
+    "Charisma": 5,
+}
+
+# Maps ability name to abbreviation
+ABILITY_ABBREVIATION = {
+    "Strength": "STR",
+    "Dexterity": "DEX",
+    "Constitution": "CON",
+    "Intelligence": "INT",
+    "Wisdom": "WIS",
+    "Charisma": "CHA",
+}
+
 INIT_ABILITIES_RAW = [
     # (Abbreviation, Initial score, Initial modifier)
-    ["STR", 10],
-    ["DEX", 10],
-    ["CON", 10],
-    ["INT", 10],
-    ["WIS", 10],
-    ["CHA", 10],
+    [ABILITY_ABBREVIATION["Strength"], 10],
+    [ABILITY_ABBREVIATION["Dexterity"], 10],
+    [ABILITY_ABBREVIATION["Constitution"], 10],
+    [ABILITY_ABBREVIATION["Intelligence"], 10],
+    [ABILITY_ABBREVIATION["Wisdom"], 10],
+    [ABILITY_ABBREVIATION["Charisma"], 10],
 ]
 
 INIT_ABILITIES = [
     # (Abbreviation, Initial score, Initial modifier)
-    ["STR", 10, 0],
-    ["DEX", 10, 0],
-    ["CON", 10, 0],
-    ["INT", 10, 0],
-    ["WIS", 10, 0],
-    ["CHA", 10, 0],
+    [ABILITY_ABBREVIATION["Strength"], 10, 0],
+    [ABILITY_ABBREVIATION["Dexterity"], 10, 0],
+    [ABILITY_ABBREVIATION["Constitution"], 10, 0],
+    [ABILITY_ABBREVIATION["Intelligence"], 10, 0],
+    [ABILITY_ABBREVIATION["Wisdom"], 10, 0],
+    [ABILITY_ABBREVIATION["Charisma"], 10, 0],
 ]
 
 ALIGNMENTS = (
@@ -52,42 +72,89 @@ ALIGNMENTS = (
 )
 
 INIT_SAVING_THROWS_RAW = [
-    ["Strength", 0],
-    ["Dexterity", 0],
-    ["Constitution", 0],
-    ["Intelligence", 0],
-    ["Wisdom", 0],
-    ["Charisma", 0],
+    # (Initial modifier, name)
+    [0, "Strength"],
+    [0, "Dexterity"],
+    [0, "Constitution"],
+    [0, "Intelligence"],
+    [0, "Wisdom"],
+    [0, "Charisma"],
 ]
 
 INIT_SAVING_THROWS = [
-    [False, "Strength", 0],
-    [False, "Dexterity", 0],
-    [False, "Constitution", 0],
-    [False, "Intelligence", 0],
-    [False, "Wisdom", 0],
-    [False, "Charisma", 0],
+    # (Initial proficiency, initial modifier, name)
+    [False, 0, "Strength"],
+    [False, 0, "Dexterity"],
+    [False, 0, "Constitution"],
+    [False, 0, "Intelligence"],
+    [False, 0, "Wisdom"],
+    [False, 0, "Charisma"],
 ]
 
-SKILLS = {
-    "Acrobatics",
-    "Animal Handling",
-    "Arcana",
-    "Athletics",
-    "Deception",
-    "History",
-    "Insight",
-    "Intimidation",
-    "Investigation",
-    "Medicine",
-    "Nature",
-    "Perception",
-    "Performance",
-    "Persuasion",
-    "Religion",
-    "Slight of Hand",
-    "Stealth",
-    "Survival",
+INIT_SKILLS_RAW = [
+    # (Initial modifier, name)
+    [0, "Acrobatics"],
+    [0, "Animal Handling"],
+    [0, "Arcana"],
+    [0, "Athletics"],
+    [0, "Deception"],
+    [0, "History"],
+    [0, "Insight"],
+    [0, "Intimidation"],
+    [0, "Investigation"],
+    [0, "Medicine"],
+    [0, "Nature"],
+    [0, "Perception"],
+    [0, "Performance"],
+    [0, "Persuasion"],
+    [0, "Religion"],
+    [0, "Sleight of Hand"],
+    [0, "Stealth"],
+    [0, "Survival"],
+]
+
+INIT_SKILLS = [
+    # (Initial proficiency, initial modifier, name)
+    [False, 0, "Acrobatics (DEX)", 1],
+    [False, 0, "Animal Handling (WIS)", 4],
+    [False, 0, "Arcana (INT)", 3],
+    [False, 0, "Athletics (STR)", 0],
+    [False, 0, "Deception (CHA)", 5],
+    [False, 0, "History (INT)", 3],
+    [False, 0, "Insight (WIS)", 4],
+    [False, 0, "Intimidation (CHA)", 5],
+    [False, 0, "Investigation (INT)", 3],
+    [False, 0, "Medicine (WIS)", 4],
+    [False, 0, "Nature (INT)", 3],
+    [False, 0, "Perception (WIS)", 4],
+    [False, 0, "Performance (CHA)", 5],
+    [False, 0, "Persuasion (CHA)", 5],
+    [False, 0, "Religion (INT)", 3],
+    [False, 0, "Sleight of Hand (DEX)", 1],
+    [False, 0, "Stealth (DEX)", 1],
+    [False, 0, "Survival (WIS)", 4],
+]
+
+# Maps skill string to relevant ability number
+SKILL_ABILITY = {
+    "Acrobatics": "Dexterity",
+    "Animal Handling": "Wisdom",
+    "Arcana": "Intelligence",
+    "Athletics": "Strength",
+    "Deception": "Charisma",
+    "History": "Intelligence",
+    "Insight": "Wisdom",
+    "Intimidation": "Charisma",
+    "Investigation": "Intelligence",
+    "Medicine": "Wisdom",
+    "Nature": "Intelligence",
+    "Perception": "Wisdom",
+    "Performance": "Charisma",
+    "Persuasion": "Charisma",
+    "Religion": "Intelligence",
+    "Slight of Hand": "Dexterity",
+    "Stealth": "Dexterity",
+    "Survival": "Wisdom",
 }
 
 
@@ -111,6 +178,9 @@ class Character:
 
         self.saving_throws_raw = INIT_SAVING_THROWS_RAW
         self.saving_throws = INIT_SAVING_THROWS
+
+        self.skills_raw = INIT_SKILLS_RAW
+        self.skills = INIT_SKILLS
 
         self.armorclass_raw = INIT_ARMORCLASS
         self.armorclass = INIT_ARMORCLASS
@@ -172,18 +242,35 @@ class Character:
     def update_actual_saving_throws(self):
         # Read in raw scores to saving_throws
         for index, saving_throw in enumerate(self.saving_throws):
-            saving_throw[2] = self.saving_throws_raw[index][1]
+            saving_throw[1] = self.saving_throws_raw[index][0]
 
         # Adjust for proficiency bonuses
         for saving_throw in self.saving_throws:
             if saving_throw[0]:
-                saving_throw[2] += self.proficiency_bonus
+                saving_throw[1] += self.proficiency_bonus
 
         # Adjust for ability modifiers
         for index, ability_score in enumerate(self.ability_scores):
-            self.saving_throws[index][2] += ability_score[2]
+            self.saving_throws[index][1] += ability_score[2]
 
         # pprint(self.saving_throws)   #TODO: Remove once function is working
+
+    def update_actual_skills(self):
+        # Read in raw scores to skills
+        for index, skill, in enumerate(self.skills):
+            skill[1] = self.skills_raw[index][0]
+
+        # Adjust for proficiency bonus
+        for skill in self.skills:
+            if skill[0]:
+                skill[1] += self.proficiency_bonus
+
+        # Adjust for ability modifiers:
+        for skill in self.skills:
+            # skill[1] += self.ability_scores[ABILITY_INDEX[SKILL_ABILITY[skill[2]]]][2]
+            skill[1] += self.ability_scores[skill[3]][2]
+
+        pprint(self.skills)
 
     def get_proficiency_bonus(self):
         return (self.level // 4) + 2
@@ -216,6 +303,7 @@ class Character:
     def print_character(self):          #TODO: remove
         """For debugging purposes"""
         pprint(self.ability_scores)
+        pprint(self.skills)
         print(self.name)
         print(self.character_class)
         print(self.subclass)

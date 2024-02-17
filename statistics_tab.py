@@ -28,17 +28,6 @@ import utils
 from pprint import pprint
 
 
-# class SkillSaveRow(QWidget):
-#     def __init__(self, text):
-#         super(SkillSaveRow, self).__init__()
-#         self.layout = QHBoxLayout
-#         self.skillsave = QRadioButton(text)
-#         self.modifier = 0
-#         self.modifier_label = "+0"
-#         self.layout.addWidget(self.skillsave)
-#         self.layout.addWidget(self.modifier_label)
-
-
 class SavingThrowsModel(QAbstractTableModel):
     def __init__(self, data):
         super().__init__()
@@ -53,12 +42,20 @@ class SavingThrowsModel(QAbstractTableModel):
                 return ""
 
             if index.column() == 1:
-                return f" {value}"
-
-            if index.column() == 2:
-                if value > 0:
+                if value >= 0:
                     return f"+{value}"
                 return value
+
+            if index.column() == 2:
+                return f" {value}"
+
+        if role == Qt.TextAlignmentRole:
+
+            if index.column() == 1:
+                return Qt.AlignHCenter
+
+            if index.column() == 2:
+                return Qt.AlignLeft
 
     def rowCount(self, index):
         return len(self.data)
@@ -81,7 +78,7 @@ class SavingThrowsView(QTableView):
         # self.verticalHeader().setDefaultSectionSize(60)
         self.horizontalHeader().hide()
         self.setShowGrid(False)
-        # self.setSelectionMode(QAbstractItemView.NoSelection)
+        self.setSelectionMode(QAbstractItemView.NoSelection)
 
 
 class SavingThrowCheckBox(QCheckBox):
@@ -101,16 +98,9 @@ class SavingThrowCheckBox(QCheckBox):
 class SavingThrowsBox(QGroupBox):
     def __init__(self, character):
         super().__init__("Saving Throws")
-        # self.strength_label = QLabel("Strength")
-        # self.dexterity_label = QLabel("Dexterity")
-        # self.layout = QVBoxLayout()
-        # self.layout.addWidget(self.strength_label)
-        # self.layout.addWidget(self.dexterity_label)
-        # self.setLayout(self.layout)
 
         self.layout = QVBoxLayout()
         self.data = character.saving_throws
-        # pprint(self.data)
 
         self.tablemodel = SavingThrowsModel(self.data)
         self.tableview = SavingThrowsView()
@@ -129,9 +119,114 @@ class SavingThrowsBox(QGroupBox):
             checkbox_pane.setLayout(checkbox_layout)
             self.tableview.setIndexWidget(self.tablemodel.index(row, 0), checkbox_pane)
 
-        self.tableview.setColumnWidth(0, 40)
-        self.tableview.setColumnWidth(1, 150)
         self.tableview.resizeRowsToContents()
+        self.tableview.resizeColumnsToContents()
+        # self.tableview.setColumnWidth(0, 10)
+        # self.tableview.setColumnWidth(1, 20)
+        self.tableview.setColumnWidth(2, 150)
+        self.layout.addWidget(self.tableview)
+        self.setLayout(self.layout)
+
+
+class SkillsModel(QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
+
+    def data(self, index, role):
+        value = self.data[index.row()][index.column()]
+
+        if role == Qt.DisplayRole:
+
+            if index.column() == 0:
+                return ""
+
+            if index.column() == 1:
+                if value >= 0:
+                    return f"+{value}"
+                return value
+
+            if index.column() == 2:
+                return f" {value}"
+
+        if role == Qt.TextAlignmentRole:
+
+            if index.column() == 1:
+                return Qt.AlignHCenter
+
+            if index.column() == 2:
+                return Qt.AlignLeft
+
+    def rowCount(self, index):
+        return len(self.data)
+
+    def columnCount(self, index):
+        return len(self.data[0])
+
+    def update_skills_view(self):
+        index1 = self.index(0, 0)
+        index2 = self.index(len(self.data), len(self.data[0]))
+        self.dataChanged.emit(index1, index2)
+
+
+class SkillsView(QTableView):
+    def __init__(self):
+        super(SkillsView, self).__init__()
+
+        self.verticalHeader().hide()
+        self.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+        # self.verticalHeader().setDefaultSectionSize(60)
+        self.horizontalHeader().hide()
+        self.setShowGrid(False)
+        self.setSelectionMode(QAbstractItemView.NoSelection)
+
+
+class SkillCheckBox(QCheckBox):
+    def __init__(self, model, row, character):
+        super().__init__()
+
+        self.row = row
+        self.model = model
+        self.character = character
+
+    def skill_checkbox_clicked(self, state):
+        self.model.data[self.row][0] = bool(state)
+        self.character.update_actual_skills()
+        self.model.update_skills_view()
+
+
+class SkillsBox(QGroupBox):
+    def __init__(self, character):
+        super().__init__("Skills")
+
+        self.layout = QVBoxLayout()
+        self.data = character.skills
+
+        self.tablemodel = SkillsModel(self.data)
+        self.tableview = SkillsView()
+        self.tableview.setModel(self.tablemodel)
+
+        self.checkboxes = []
+        for row in range(self.tablemodel.rowCount(0)):
+            checkbox = SkillCheckBox(self.tablemodel, row, character)
+            checkbox.stateChanged.connect(checkbox.skill_checkbox_clicked)
+            self.checkboxes.append(checkbox)
+
+            checkbox_layout = QVBoxLayout()
+            checkbox_layout.setAlignment(Qt.AlignHCenter)
+            checkbox_layout.addWidget(checkbox)
+            checkbox_pane = QWidget()
+            checkbox_pane.setLayout(checkbox_layout)
+            self.tableview.setIndexWidget(self.tablemodel.index(row, 0), checkbox_pane)
+
+        # self.tableview.setColumnWidth(0, 40)
+        # self.tableview.setColumnWidth(1, 150)
+        # self.tableview.resizeRowsToContents()
+        self.tableview.resizeRowsToContents()
+        self.tableview.resizeColumnsToContents()
+        # self.tableview.setColumnWidth(0, 10)
+        # self.tableview.setColumnWidth(1, 20)
+        self.tableview.setColumnWidth(2, 250)
         self.layout.addWidget(self.tableview)
         self.setLayout(self.layout)
 
@@ -207,7 +302,6 @@ class HitDiceBox(QGroupBox):
         character.update_hitdie()
         self.statlabel.setText(f"{character.level}d{character.hitdie}")
 
-# Saving throws
 
 # Skills
 
@@ -235,6 +329,9 @@ class StatisticsTab(QWidget):
 
         self.savingthrowsbox = SavingThrowsBox(character)
         self.sublayout_left.addWidget(self.savingthrowsbox)
+
+        self.skillsbox = SkillsBox(character)
+        self.sublayout_left.addWidget(self.skillsbox)
 
         self.proficiencybox = ProficiencyBonusBox(character)
         self.topright_layout.addWidget(self.proficiencybox, 0, 0)
