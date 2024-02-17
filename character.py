@@ -17,7 +17,7 @@ INIT_BACKGROUND = sorted(BACKGROUNDS)[0]
 INIT_ARMORCLASS = 10
 INIT_INITIATIVE = 0
 INIT_SPEED = 30
-INIT_HITDIE = 12
+INIT_HITDIE = CLASSES[INIT_CLASS]["Hit Die"]
 
 INIT_ABILITIES_RAW = [
     # (Abbreviation, Initial score, Initial modifier)
@@ -118,8 +118,9 @@ class Character:
         self.initiative = INIT_INITIATIVE
         self.speed_raw = INIT_SPEED
         self.speed = INIT_SPEED
-        self.hitpoints_raw = self.calculate_hit_points()
-        self.hitpoints = self.calculate_hit_points()
+        self.hitpoints = 0
+        self.calculate_hit_points()  # sets self.hitpoints
+        # self.hitpoints_raw = self.calculate_hit_points()
 
     # Ability score helper functions
     def replace_ability_scores(self, new_scores: list):

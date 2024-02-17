@@ -28,15 +28,15 @@ from PyQt5.QtGui import (
     QFont,
 )
 
-from character import *     # TODO: This line in necessary even though it is greyed out
+from character import *     # TODO: This line is necessary even though it is greyed out
 from utils import set_font
 
 random.seed(time.time())
 
 
 class AbilitiesTableModel(QAbstractTableModel):
-    """Model used to store the characters abilities. Accessed by other widgets in the abilities pane to change the abilities
-    data. Separate from the abilities table stored in the character object."""
+    """Model used to store the characters abilities. Accessed by other widgets in the abilities pane to change the
+    abilities data. Separate from the abilities table stored in the character object."""
 
     def __init__(self, data):
         super().__init__()
