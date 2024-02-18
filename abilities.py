@@ -22,6 +22,7 @@ from PyQt5.QtWidgets import (
     QLabel,
     QTableView,
     QHeaderView,
+    QToolTip,
 )
 
 from PyQt5.QtGui import (
@@ -126,6 +127,8 @@ class AbilitiesPane(QWidget):
         set_font(self.swap_button, 12, bold=True)
         self.swap_button.setCheckable(False)
         self.swap_button.clicked.connect(self.swap_button_clicked)
+        QToolTip.setFont(QFont("Ariel", 14))
+        self.swap_button.setToolTip("Use Ctrl-Click to select two ability scores, then push to swap!")
         self.layout.addWidget(self.swap_button)
 
         # Set size and layout of abilities pane
