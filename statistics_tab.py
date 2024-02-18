@@ -164,6 +164,7 @@ class SkillsModel(QAbstractTableModel):
         return len(self.data[0])
 
     def update_skills_view(self):
+        print("update skills view")
         index1 = self.index(0, 0)
         index2 = self.index(len(self.data), len(self.data[0]))
         self.dataChanged.emit(index1, index2)
@@ -303,10 +304,18 @@ class HitDiceBox(QGroupBox):
         self.statlabel.setText(f"{character.level}d{character.hitdie}")
 
 
-# Skills
-
 # Passive Skills
 
+class PassivePerceptionBox(QGroupBox):
+    def __init__(self, character):
+        super().__init__("Passive Perception")
+        self.statlabel = QLabel()
+        self.update_passiveperceptionbox(character)
+        StatisticsTab.constructStatBox(self, self.statlabel, Qt.AlignLeft)
+
+    def update_passiveperceptionbox(self, character):
+        character.update_passive_perception()
+        self.statlabel.setText(f"{character.passive}")
 
 # Attacks
 
@@ -332,6 +341,9 @@ class StatisticsTab(QWidget):
 
         self.skillsbox = SkillsBox(character)
         self.sublayout_left.addWidget(self.skillsbox)
+
+        self.passiveperceptionbox = PassivePerceptionBox(character)
+        self.sublayout_left.addWidget(self.passiveperceptionbox)
 
         self.proficiencybox = ProficiencyBonusBox(character)
         self.topright_layout.addWidget(self.proficiencybox, 0, 0)
@@ -363,6 +375,8 @@ class StatisticsTab(QWidget):
 
     def refresh_statistics_tab(self):
         self.savingthrowsbox.tablemodel.update_saving_throws_view()
+        self.skillsbox.tablemodel.update_skills_view()
+        self.passiveperceptionbox.update_passiveperceptionbox(self.character)
         self.proficiencybox.update_proficiencybonusbox(self.character)
         self.armorclassbox.update_armorclassbox(self.character)
         self.hitdicebox.update_hitdicebox(self.character)
@@ -371,11 +385,12 @@ class StatisticsTab(QWidget):
         self.speedbox.update_speedbox(self.character)
 
     @staticmethod
-    def constructStatBox(statbox, statlabel):
+    def constructStatBox(statbox, statlabel, statalignment=Qt.AlignHCenter):
         """Used to formate single stat display boxes (passed as 'statbox').
          Centres the label (passed as 'statlabel') within the box."""
-        statbox.setAlignment(Qt.AlignHCenter)
+        # statbox.setAlignment(Qt.AlignHCenter)
+        statbox.setAlignment(Qt.AlignLeft)
         statbox.layout = QHBoxLayout()
-        statbox.layout.setAlignment(Qt.AlignHCenter)
+        statbox.layout.setAlignment(statalignment)
         statbox.layout.addWidget(statlabel)
         statbox.setLayout(statbox.layout)

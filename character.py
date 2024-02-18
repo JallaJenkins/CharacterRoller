@@ -18,6 +18,7 @@ INIT_ARMORCLASS = 10
 INIT_INITIATIVE = 0
 INIT_SPEED = 30
 INIT_HITDIE = CLASSES[INIT_CLASS]["Hit Die"]
+INIT_PASSIVE = 10
 
 # Maps ability name to number
 ABILITY_INDEX = {
@@ -181,6 +182,7 @@ class Character:
 
         self.skills_raw = INIT_SKILLS_RAW
         self.skills = INIT_SKILLS
+        self.passive = INIT_PASSIVE
 
         self.armorclass_raw = INIT_ARMORCLASS
         self.armorclass = INIT_ARMORCLASS
@@ -238,8 +240,12 @@ class Character:
         # # Update saving throws
         self.update_actual_saving_throws()
 
+        # Update skills
+        self.update_actual_skills()
+
     # Saving throw helper functions
     def update_actual_saving_throws(self):
+        print("update actual saving throws")
         # Read in raw scores to saving_throws
         for index, saving_throw in enumerate(self.saving_throws):
             saving_throw[1] = self.saving_throws_raw[index][0]
@@ -271,6 +277,9 @@ class Character:
             skill[1] += self.ability_scores[skill[3]][2]
 
         pprint(self.skills)
+
+    def update_passive_perception(self):
+        self.passive = INIT_PASSIVE + self.ability_scores[4][2] + self.get_proficiency_bonus()
 
     def get_proficiency_bonus(self):
         return (self.level // 4) + 2
